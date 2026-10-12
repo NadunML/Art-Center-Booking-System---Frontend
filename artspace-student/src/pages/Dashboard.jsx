@@ -1,2 +1,88 @@
-import { Link } from 'react-router-dom';import { CalendarCheck2, Clock3, ClipboardList, Plus, ArrowUpRight, Music2 } from 'lucide-react';import StatCard from '../components/dashboard/StatCard';import BookingCalendar from '../components/dashboard/BookingCalendar';import UpcomingBookings from '../components/dashboard/UpcomingBookings';import {bookings,events} from '../data/mockData';
-export default function Dashboard(){return <div className="space-y-7"><div className="flex flex-wrap items-center justify-between gap-4"><div><h1 className="text-2xl md:text-3xl font-bold tracking-tight">Welcome back, Student 👋</h1><p className="muted mt-2">Here's what's happening at your Art Center.</p></div><Link to="/book" className="primary-btn"><Plus size={18}/> New Booking</Link></div><div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4"><StatCard title="Upcoming Bookings" value={bookings.filter(b=>b.status==='Approved').length} Icon={CalendarCheck2}/><StatCard title="Pending Requests" value={bookings.filter(b=>b.status==='Pending').length} Icon={Clock3} accent="amber"/><StatCard title="Total Bookings" value={bookings.length} Icon={ClipboardList} accent="green"/></div><div className="grid xl:grid-cols-[1.35fr_1fr] gap-5"><BookingCalendar/><div className="space-y-5"><UpcomingBookings/><div className="panel p-5 md:p-6"><div className="flex justify-between items-center mb-4"><h2 className="section-title">University Events</h2><Link to="/events" className="text-blue-600 text-sm font-semibold"><ArrowUpRight size={18}/></Link></div>{events.map(e=><div key={e.title} className="flex gap-3 py-3 border-t border-slate-100"><span className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 h-fit"><Music2 size={19}/></span><div><div className="text-sm font-semibold">{e.title}</div><div className="text-xs muted mt-1">{e.date} · {e.time}</div></div></div>)}</div></div></div></div>}
+import { Link } from 'react-router-dom';
+import {
+  ArrowUpRight,
+  CalendarCheck2,
+  ClipboardList,
+  Clock3,
+  Music2,
+  Plus,
+} from 'lucide-react';
+import StatCard from '../components/dashboard/StatCard';
+import BookingCalendar from '../components/dashboard/BookingCalendar';
+import UpcomingBookings from '../components/dashboard/UpcomingBookings';
+import { bookings, events } from '../data/mockData';
+
+export default function Dashboard() {
+  return (
+    <div className="space-y-7">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
+            Welcome back, Student !
+          </h1>
+          <p className="muted mt-2">
+            Here's what's happening at your Art Center.
+          </p>
+        </div>
+        <Link to="/book" className="primary-btn">
+          <Plus size={18} /> New Booking
+        </Link>
+      </div>
+
+      <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+        <StatCard
+          title="Upcoming Bookings"
+          value={bookings.filter((booking) => booking.status === 'Approved').length}
+          Icon={CalendarCheck2}
+        />
+        <StatCard
+          title="Pending Requests"
+          value={bookings.filter((booking) => booking.status === 'Pending').length}
+          Icon={Clock3}
+          accent="amber"
+        />
+        <StatCard
+          title="Total Bookings"
+          value={bookings.length}
+          Icon={ClipboardList}
+          accent="green"
+        />
+      </div>
+
+      <div className="grid xl:grid-cols-[1.35fr_1fr] gap-5">
+        <BookingCalendar />
+        <div className="space-y-5">
+          <UpcomingBookings />
+          <div className="panel p-5 md:p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="section-title">University Events</h2>
+              <Link
+                to="/events"
+                className="text-blue-600 text-sm font-semibold"
+                aria-label="View university events"
+              >
+                <ArrowUpRight size={18} />
+              </Link>
+            </div>
+            {events.map((event) => (
+              <div
+                key={event.title}
+                className="flex gap-3 py-3 border-t border-slate-100"
+              >
+                <span className="p-2.5 rounded-xl bg-indigo-50 text-indigo-600 h-fit">
+                  <Music2 size={19} />
+                </span>
+                <div>
+                  <div className="text-sm font-semibold">{event.title}</div>
+                  <div className="text-xs muted mt-1">
+                    {event.date} · {event.time}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
