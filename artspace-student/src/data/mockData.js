@@ -1,0 +1,3 @@
+export const bookings=[{id:'AS-1001',purpose:'Band Practice',date:'2026-10-15',time:'10:00 AM – 12:00 PM',status:'Approved'},{id:'AS-1002',purpose:'Choir Rehearsal',date:'2026-10-18',time:'02:00 PM – 04:00 PM',status:'Pending'},{id:'AS-1003',purpose:'Guitar Practice',date:'2026-10-20',time:'09:00 AM – 10:00 AM',status:'Approved'}];
+export const events=[{title:'University Cultural Evening',date:'2026-10-22',time:'04:00 PM – 08:00 PM'},{title:'Music Society Rehearsal',date:'2026-10-25',time:'09:00 AM – 12:00 PM'}];
+export const notifications=[{title:'Booking approved',detail:'Your Band Practice booking has been approved.',time:'2 hours ago'},{title:'Request received',detail:'Your Choir Rehearsal request is pending approval.',time:'Yesterday'}];

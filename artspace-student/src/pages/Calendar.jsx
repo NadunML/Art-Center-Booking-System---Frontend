@@ -1,0 +1,1 @@
+import BookingCalendar from '../components/dashboard/BookingCalendar';export default function Calendar(){return <div className="space-y-5"><div><h1 className="text-3xl font-bold">Booking Calendar</h1><p className="muted mt-2">Explore the Art Center calendar. Dates are demonstration data.</p></div><BookingCalendar/></div>}
