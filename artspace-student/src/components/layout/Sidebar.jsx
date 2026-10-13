@@ -1,4 +1,122 @@
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, CalendarDays, CalendarPlus2, ClipboardList, Music2, Bell, UserRound, LogOut } from 'lucide-react';
-const items=[['/','Dashboard',LayoutDashboard],['/calendar','Booking Calendar',CalendarDays],['/book','New Booking',CalendarPlus2],['/bookings','My Bookings',ClipboardList],['/events','University Events',Music2],['/notifications','Notifications',Bell],['/profile','Profile',UserRound]];
-export default function Sidebar({onNavigate=()=>{},fixed=false}){return <aside className={`bg-black text-neutral-300 w-64 ${fixed?'fixed inset-y-0 left-0 z-40 h-screen':'min-h-screen'} flex flex-col shrink-0`}><div className="h-20 flex items-center gap-3 px-6 border-b border-white/10"><span className="bg-neutral-800 rounded-lg p-2.5 text-white"><Music2 size={22}/></span><div><div className="text-white font-bold text-xl">ArtSpace</div><div className="text-xs text-neutral-400">Student Portal</div></div></div><nav className="flex-1 p-3 space-y-1 mt-4 overflow-y-auto">{items.map(([url,label,Icon])=><NavLink key={url} to={url} end={url==='/'} onClick={onNavigate} className={({isActive})=>`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition ${isActive?'bg-neutral-800 text-white':'hover:bg-white/10 hover:text-white'}`}><Icon size={19}/>{label}</NavLink>)}</nav><div className="border-t border-white/10 p-4"><div className="text-xs text-neutral-400 mb-3">Demo interface • No authentication</div><div className="flex gap-2 items-center text-sm"><LogOut size={17}/> Logout (coming soon)</div></div></aside>}
+
+import { NavLink } from "react-router-dom";
+import {
+  LayoutDashboard,
+  CalendarDays,
+  PlusCircle,
+  ClipboardList,
+  Music2,
+  Bell,
+  UserRound,
+} from "lucide-react";
+
+const menuItems = [
+  {
+    label: "Dashboard",
+    path: "/",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Calendar",
+    path: "/calendar",
+    icon: CalendarDays,
+  },
+  {
+    label: "New Booking",
+    path: "/book",
+    icon: PlusCircle,
+  },
+  {
+    label: "My Bookings",
+    path: "/bookings",
+    icon: ClipboardList,
+  },
+  {
+    label: "University Events",
+    path: "/events",
+    icon: Music2,
+  },
+  {
+    label: "Notifications",
+    path: "/notifications",
+    icon: Bell,
+  },
+];
+
+export default function Sidebar() {
+  return (
+    <aside className="w-full lg:w-64 lg:min-h-screen bg-slate-950 text-white flex flex-col lg:sticky lg:top-0 lg:h-screen">
+
+      {/* Logo */}
+      <div className="px-5 py-6 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+            <Music2 size={22} />
+          </div>
+
+          <div>
+            <h1 className="text-xl font-bold">
+              ArtSpace
+            </h1>
+
+            <p className="text-xs text-slate-400">
+              Student Portal
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 p-3 space-y-1">
+        {menuItems.map(({ label, path, icon: Icon }) => (
+          <NavLink
+            key={path}
+            to={path}
+            end={path === "/"}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-xl
+               text-sm font-medium transition-colors
+               ${
+                 isActive
+                   ? "bg-blue-600 text-white"
+                   : "text-slate-300 hover:bg-white/10 hover:text-white"
+               }`
+            }
+          >
+            <Icon size={19} />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* User Account */}
+      <div className="p-3 border-t border-white/10">
+        <NavLink
+          to="/profile"
+          className={({ isActive }) =>
+            `flex items-center gap-3 p-3 rounded-xl transition-colors
+             ${
+               isActive
+                 ? "bg-blue-600"
+                 : "hover:bg-white/10"
+             }`
+          }
+        >
+          <div className="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
+            <UserRound size={20} />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold truncate">
+              Student Account
+            </p>
+
+            <p className="text-xs text-slate-400 truncate">
+              View Profile
+            </p>
+          </div>
+        </NavLink>
+      </div>
+    </aside>
+  );
+}
