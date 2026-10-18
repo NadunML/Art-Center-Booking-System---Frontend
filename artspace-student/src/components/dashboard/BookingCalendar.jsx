@@ -1,3 +1,262 @@
-import { useState } from 'react';import { ChevronLeft,ChevronRight } from 'lucide-react';
-const busy={15:'approved',18:'pending',22:'event',25:'event'};
-export default function BookingCalendar(){const [offset,setOffset]=useState(0);const [selected,setSelected]=useState(null);const month=new Date(2026,9+offset,1);const year=month.getFullYear(),m=month.getMonth(),count=new Date(year,m+1,0).getDate(),start=(month.getDay()+6)%7;const cells=Array.from({length:Math.ceil((start+count)/7)*7},(_,i)=>{const d=i-start+1;return d>0&&d<=count?d:null});return <div className="panel p-5 md:p-6"><div className="flex items-center justify-between mb-5"><h2 className="section-title">Booking Calendar</h2><div className="flex items-center gap-3"><button aria-label="Previous month" onClick={()=>{setOffset(x=>x-1);setSelected(null)}}><ChevronLeft size={18}/></button><span className="font-semibold text-sm min-w-28 text-center">{month.toLocaleString('en-US',{month:'long',year:'numeric'})}</span><button aria-label="Next month" onClick={()=>{setOffset(x=>x+1);setSelected(null)}}><ChevronRight size={18}/></button></div></div><div className="grid grid-cols-7 gap-1.5">{['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map((x,i)=><div key={i} className="text-center text-xs text-slate-400 font-semibold py-2">{x}</div>)}{cells.map((d,i)=><button key={i} disabled={!d} onClick={()=>setSelected(d)} className={`h-10 md:h-12 rounded-lg text-sm font-medium ${!d?'opacity-0':selected===d?'bg-blue-600 text-white':offset===0&&busy[d]==='approved'?'bg-red-50 text-red-700':offset===0&&busy[d]==='pending'?'bg-amber-50 text-amber-700':offset===0&&busy[d]==='event'?'bg-purple-50 text-purple-700':'bg-slate-50 hover:bg-blue-50'}`}>{d}</button>)}</div><div className="flex flex-wrap gap-4 text-xs muted mt-5">{[['bg-slate-200','Available / not checked'],['bg-red-400','Booked'],['bg-amber-400','Pending'],['bg-purple-400','Event']].map(([c,l])=><span key={l} className="flex items-center gap-1.5"><i className={`w-2.5 h-2.5 rounded-full ${c}`}/>{l}</span>)}</div>{selected&&<p className="mt-4 text-sm text-blue-700">Selected: {year}-{String(m+1).padStart(2,'0')}-{String(selected).padStart(2,'0')}. Open New Booking to request a time.</p>}<p className="text-xs muted mt-3">Illustrative dates only. Real availability requires the backend.</p></div>}
+
+import { useState } from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  CalendarDays,
+} from "lucide-react";
+
+const WEEKDAYS = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+];
+
+export default function BookingCalendar() {
+  const [currentDate, setCurrentDate] = useState(
+    new Date()
+  );
+
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+
+  const daysInMonth = lastDay.getDate();
+
+  // Convert Sunday-first indexing to Monday-first.
+  const startingDay = (firstDay.getDay() + 6) % 7;
+
+  const today = new Date();
+
+  const isToday = (day) =>
+    day === today.getDate() &&
+    month === today.getMonth() &&
+    year === today.getFullYear();
+
+  const previousMonth = () => {
+    setCurrentDate(
+      new Date(year, month - 1, 1)
+    );
+  };
+
+  const nextMonth = () => {
+    setCurrentDate(
+      new Date(year, month + 1, 1)
+    );
+  };
+
+  const calendarDays = [
+    ...Array(startingDay).fill(null),
+    ...Array.from(
+      { length: daysInMonth },
+      (_, index) => index + 1
+    ),
+  ];
+
+  // Complete the final calendar row.
+  const remainingCells =
+    (7 - (calendarDays.length % 7)) % 7;
+
+  const fullCalendarDays = [
+    ...calendarDays,
+    ...Array(remainingCells).fill(null),
+  ];
+
+  return (
+    <div className="panel p-4 md:p-5 h-full flex flex-col">
+
+      {/* Calendar Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+
+        <div>
+          <h2 className="section-title">
+            Booking Calendar
+          </h2>
+
+          <p className="text-xs muted mt-1">
+            Art Center availability
+          </p>
+        </div>
+
+        {/* Month Navigation */}
+        <div className="flex items-center gap-1">
+
+          <button
+            type="button"
+            onClick={previousMonth}
+            className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            aria-label="Previous month"
+          >
+            <ChevronLeft size={17} />
+          </button>
+
+          <span className="text-xs sm:text-sm font-semibold min-w-[112px] text-center">
+            {currentDate.toLocaleDateString(
+              "en-US",
+              {
+                month: "long",
+                year: "numeric",
+              }
+            )}
+          </span>
+
+          <button
+            type="button"
+            onClick={nextMonth}
+            className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            aria-label="Next month"
+          >
+            <ChevronRight size={17} />
+          </button>
+
+        </div>
+      </div>
+
+      {/* Weekday Headers */}
+      <div className="grid grid-cols-7 gap-1 mb-1">
+
+        {WEEKDAYS.map((day) => (
+          <div
+            key={day}
+            className={`
+              text-center text-[11px]
+              font-semibold py-1 rounded-md
+              ${
+                day === "Wed"
+                  ? "bg-red-100 text-red-700"
+                  : "text-slate-500"
+              }
+            `}
+          >
+            {day}
+          </div>
+        ))}
+
+      </div>
+
+      {/* Calendar Dates */}
+      <div className="grid grid-cols-7 gap-1">
+
+        {fullCalendarDays.map((day, index) => {
+          if (day === null) {
+            return (
+              <div
+                key={`empty-${index}`}
+                className="h-8 sm:h-9"
+              />
+            );
+          }
+
+          const date = new Date(
+            year,
+            month,
+            day
+          );
+
+          const isWednesday =
+            date.getDay() === 3;
+
+          const selectedToday =
+            isToday(day);
+
+          const isPast =
+            new Date(
+              year,
+              month,
+              day
+            ).setHours(0, 0, 0, 0) <
+            new Date().setHours(0, 0, 0, 0);
+
+          return (
+            <div
+              key={`${year}-${month}-${day}`}
+              title={
+                isWednesday
+                  ? "Unavailable - Lecturer Practice"
+                  : isPast
+                  ? "Past date"
+                  : "Booking date"
+              }
+              aria-label={
+                `${date.toDateString()} - ${
+                  isWednesday
+                    ? "Unavailable: Lecturer Practice"
+                    : isPast
+                    ? "Past date"
+                    : "Booking date"
+                }`
+              }
+              className={`
+                h-8 sm:h-9
+                rounded-lg
+                flex items-center justify-center
+                text-xs font-medium
+                border transition-colors
+
+                ${
+                  isWednesday
+                    ? "bg-red-100 text-red-700 border-red-200 cursor-not-allowed"
+                    : isPast
+                    ? "bg-slate-50 text-slate-400 border-slate-100"
+                    : "bg-white text-slate-700 border-slate-100 hover:bg-blue-50"
+                }
+
+                ${
+                  selectedToday && !isWednesday
+                    ? "ring-2 ring-blue-500"
+                    : ""
+                }
+              `}
+            >
+              {day}
+            </div>
+          );
+        })}
+
+      </div>
+
+      {/* Calendar Legend */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 pt-3 border-t border-slate-100">
+
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded bg-white border border-slate-300" />
+
+          <span className="text-[11px] muted">
+            Booking dates
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="w-3 h-3 rounded bg-red-200" />
+
+          <span className="text-[11px] muted">
+            Wednesday - Unavailable
+          </span>
+        </div>
+
+      </div>
+
+      {/* Wednesday Notice */}
+      <div className="mt-3 p-2.5 bg-red-50 border border-red-100 rounded-lg flex items-start gap-2">
+
+        <CalendarDays
+          size={16}
+          className="text-red-600 shrink-0 mt-0.5"
+        />
+
+        <p className="text-[11px] text-red-700 leading-relaxed">
+          <strong>Notice:</strong> Every Wednesday is reserved
+          for lecturer practice. Student bookings are
+          not allowed.
+        </p>
+
+      </div>
+    </div>
+  );
+}

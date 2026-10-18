@@ -1,6 +1,17 @@
-import { useState } from 'react';
-import { Outlet, NavLink } from 'react-router-dom';
-import { LayoutDashboard, CalendarDays, CalendarPlus2, ClipboardList, X } from 'lucide-react';
-import Sidebar from './Sidebar';import Navbar from './Navbar';
-const mobile=[['/','Home',LayoutDashboard],['/calendar','Calendar',CalendarDays],['/book','Book',CalendarPlus2],['/bookings','Bookings',ClipboardList]];
-export default function MainLayout(){const [open,setOpen]=useState(false);return <div className="min-h-screen flex bg-neutral-100"><div className="hidden lg:block w-64 shrink-0"><Sidebar fixed/></div>{open&&<div className="fixed inset-0 z-40 lg:hidden flex"><div className="absolute inset-0 bg-slate-950/60" onClick={()=>setOpen(false)}/><div className="relative"><Sidebar onNavigate={()=>setOpen(false)}/><button className="absolute top-5 right-3 text-white" aria-label="Close navigation" onClick={()=>setOpen(false)}><X/></button></div></div>}<div className="flex-1 min-w-0"><Navbar onMenu={()=>setOpen(true)}/><main className="p-4 md:p-7 lg:p-9 pb-24 lg:pb-9 max-w-[1600px] mx-auto"><Outlet/></main></div><nav className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 z-30 flex justify-around py-2" aria-label="Mobile navigation">{mobile.map(([to,label,Icon])=><NavLink key={to} to={to} end={to==='/'} className={({isActive})=>`flex flex-col items-center gap-1 px-2 py-1 text-xs ${isActive?'text-blue-600':'text-slate-500'}`}><Icon size={21}/>{label}</NavLink>)}</nav></div>}
+
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
+
+export default function MainLayout() {
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <Sidebar />
+
+      <main className="flex-1 min-w-0 min-h-screen">
+        <div className="w-full px-4 py-5 sm:px-6 lg:px-8">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+}
